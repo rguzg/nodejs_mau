@@ -1,0 +1,3 @@
+package.json permite reconstruir un proyecto cuando se le instalen dependencias
+
+--save almacenar en las dependencias
