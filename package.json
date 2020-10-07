@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "API Rest using express.js",
   "main": "index.js",
-  "type": "module",
   "scripts": {
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +24,7 @@
   "author": "rguzg",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
   }
 }
