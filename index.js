@@ -14,11 +14,11 @@ const app = express();
     Verbos HTTP
 
     Peticiones entre diferentes entidades en la web
-    - GET
-    - POST 
+    - GET: Obtener un recurso
+    - POST: Almacenar/Crear recursos 
     - PATCH: Actualizar una parte de un recurso
     - PUT: Actualiza un recurso completo
-    - DELETE
+    - DELETE - Elimina un recurso
 */
 
 /*
@@ -26,14 +26,12 @@ const app = express();
     res = objeto de respuesta
 */
 app.get("/", (req, res, next) => {
-    res.status(200);
-    res.send("Bienvenido al Pokedéx");
+    return res.status(200).send("Bienvenido al Pokedéx");
 });
 
 // JS lee de manera lineal los métodos GET. i.e. en este orden -> / -> /all -> /:id hasta encontrar una ruta que empate con la ruta en la petición
-app.get("/pokemon/all", (req, res, next) => {
-    res.status(200);
-    res.send(pokemon);
+app.get("/pokemon/", (req, res, next) => {
+    return res.status(200).send(pokemon);
 });
 
 // : antes de la ruta almacena el contenido de la ruta en una variable. Básciamente funciona como un cómodin, aquí se está diciendo que cualquier ruta que tenga algo después de / llegará a esta función
@@ -42,26 +40,23 @@ app.get('/pokemon/:id([0-9]{1,3})', (req, res, next) => {
     const pokemon_id = req.params.id - 1;
     
     if(pokemon_id >= 0 && pokemon_id <= 150){
-        res.status(200);
-        return res.send(pokemon[pokemon_id]);
+        return res.status(200).send(pokemon[pokemon_id]);
     } 
-    res.status(404);
-    return res.send(`Error 404: Pokémon no encontrado`);
+
+    return res.status(404).send(`Error 404: Pokémon no encontrado`);
 });
 
-app.get('/pokemon/:name', (req, res, next) => {
+// Name no números
+app.get('/pokemon/:name([A-Za-z]+)', (req, res, next) => {
     const pokemon_name = req.params.name;
 
-    pokemon.forEach(element => {
-        if(element.name == pokemon_name){
-            res.status(200);
-            return res.send(element);
-        }
+    // retorna arreglo con los elementos que cumplan con la condición del filtro
+    const queryResult = pokemon.filter((p) => {
+        return (p.name.toUpperCase() == pokemon_name.toUpperCase()) ? p : null;
     });
     
     // If no Pokémon is found
-    res.status(404);
-    return res.send(`Error 404: Pokémon no encontrado`);
+    (queryResult.length > 0) ? res.status(200).send(queryResult) : res.status(404).send(`Error 404: Pokémon no encontrado`);
 });
 
 app.listen(process.env.PORT || 3000, () => {
