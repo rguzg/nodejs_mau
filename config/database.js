@@ -1,5 +1,5 @@
-const mysql = require(mysql);
-const util = require(util);
+const mysql = require('mysql');
+const util = require('util');
 
 // Mulitples conexiones
 const pool = mysql.createPool({
@@ -11,6 +11,6 @@ const pool = mysql.createPool({
 });
 
 // Hacer que todas las query regresen promesas. No more callback hell!
-pool.query = util.promesify();
+pool.query = util.promisify(pool.query);
 
 module.exports = pool;
