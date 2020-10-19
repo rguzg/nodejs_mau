@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyparser = require('body-parser');
 const pokemon = require('./routes/pokemon')
 const morgan = require('morgan');
 
@@ -29,16 +28,26 @@ const app = express();
 */
 
 // use -> Aplicar una función a todas las peticiones que entren a la aplicación, osea middleware
-app.use(bodyparser.json());
-app.use(bodyparser.urlencoded({extended: true}));
+// app.use(bodyparser.json());
+// app.use(bodyparser.urlencoded({extended: true}));
+
+//Body parser de express
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev'));
 
 app.get("/", (req, res, next) => {
-    return res.status(200).send("Bienvenido al Pokedéx");
+    return res.status(200).json({code: 200, message:"Bienvenido al Pokédex"});
 });
 
 //Todas las rutas /pokemon utilizaran lo que está dentro de pokemon
 app.use("/pokemon", pokemon);
+
+// Baby's first middleware 😙
+// El middleware está hasta abajo para que solo se envie 404 si no se encuentra ingresa a ninguna de las rutas de arriba 
+app.use((req, res, next) => {
+    return res.status(404).json({code: 404, message: "URL no encontrada"});
+});
 
 // || -> Si existe PORT usar este valor, sino utilizar 3000
 app.listen(process.env.PORT || 3000, () => {

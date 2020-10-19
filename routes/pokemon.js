@@ -13,11 +13,10 @@ pokemon.post("/", (req, res, next) => {
 // GET de todos los elementos sea el nombre del recurso
 pokemon.get("/", async (req, res, next) => {
     // No callback!
-    console.log(pokedex_length);
     const queryResult = await db.query("SELECT * FROM pokemon;");
 
     // Convertir el resultado de la query a un JSON
-    return res.status(200).json(queryResult);
+    return res.status(200).json({code: 200, message: queryResult});
 });
 
 // : antes de la ruta almacena el contenido de la ruta en una variable. Básciamente funciona como un cómodin, aquí se está diciendo que cualquier ruta que tenga algo después de / llegará a esta función
@@ -28,10 +27,10 @@ pokemon.get('/:id([0-9]{1,3})', async (req, res, next) => {
     if(pokemon_id >= 0 && pokemon_id <= 722){
         const queryResult = await db.query(`SELECT * FROM pokemon WHERE ${pokemon_id} = pok_id;`)
 
-        return res.status(200).json(queryResult);
+        return res.status(200).json({code: 200, message: queryResult});
     } 
 
-    return res.status(404).send(`Error 404: Pokémon no encontrado`);
+    return res.status(404).json({code: 404, message:`Error 404: Pokémon no encontrado`});
 });
 
 // Name no números
@@ -50,7 +49,7 @@ pokemon.get('/:name([A-Za-z]+)', async (req, res, next) => {
     console.log(queryResult);
     
     // If no Pokémon is found
-    (queryResult.length > 0) ? res.status(200).send(queryResult) : res.status(404).send(`Error 404: Pokémon no encontrado`);
+    (queryResult.length > 0) ? res.status(200).json({code: 200, message: queryResult}) : res.status(404).json({code: 404, message: `Error 404: Pokémon no encontrado`});
 });
 
 module.exports = pokemon;
