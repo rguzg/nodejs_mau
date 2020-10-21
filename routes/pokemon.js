@@ -5,8 +5,27 @@ const db = require('../config/database');
 
 //const pokedex = require('../pokedex.json').pokemon;
 
-pokemon.post("/", (req, res, next) => {
-    return res.status(200).send(req.body)
+pokemon.post("/", async (req, res, next) => {
+    const {pok_name, pok_height, pok_weight, pok_base_experience} = req.body;
+    
+    // Validar que los valores sean correctos
+    if(pok_name && pok_height && pok_weight && pok_base_experience){
+        let sql_query = `INSERT INTO pokemon (pok_name, pok_height, pok_weight, pok_base_experience)`;
+        sql_query += ` VALUES ('${pok_name}', ${pok_height}, ${pok_weight}, ${pok_base_experience});`;
+
+        const queryResult = await db.query(sql_query);
+
+        if(queryResult.affectedRows == 1){
+            return res.status(201).json({
+                id: queryResult.insertId,
+                ... req.body
+            });
+        } else {
+            return res.status(400).json({code: 400, message: "Ocurrió un error"});
+        }
+    }
+    
+    return res.status(400).json({code: 400, message: "Ocurrió un error"});
 });
 
 // JS lee de manera lineal los métodos GET. i.e. en este orden -> / -> /all -> /:id hasta encontrar una ruta que empate con la ruta en la petición
