@@ -25,7 +25,57 @@ pokemon.post("/", async (req, res, next) => {
         }
     }
     
-    return res.status(400).json({code: 400, message: "Ocurrió un error"});
+});
+
+pokemon.delete("/:id([0-9]{1,3})", async (req, res, next) => {
+    const delete_id = req.params.id
+    const query = `DELETE FROM pokemon WHERE pok_id = ${delete_id}`;
+    
+    const query_result = await db.query(query);
+    
+    if(query_result.affectedRows == 1){
+        return res.status(200).json({code: 200, message: "Pokémon eliminado correctamente"})
+    } else {
+        console.log(query_result);
+        return res.status(404).json({code: 404, message: "Pokémon no existe"});
+    }
+});
+
+pokemon.put("/:id([0-9]{1,3})", async (req, res, next) => {
+    const {pok_name, pok_height, pok_weight, pok_base_experience} = req.body;
+
+    const query = `UPDATE pokemon SET pok_name= '${pok_name}' , pok_height= ${pok_height}, pok_weight = ${pok_weight}, pok_base_experience = ${pok_base_experience} WHERE pok_id = ${req.params.id}`;
+
+    const queryResult = await db.query(query);
+
+    if(queryResult.affectedRows == 1){
+        return res.status(200).json({
+            ... req.body
+        });
+    } else {
+        return res.status(400).json({code: 400, message: "Ocurrió un error"});
+    }
+});
+
+// Patch para cambiar el nombre
+pokemon.patch("/:id([0-9]{1,3})", async (req, res, next) => {
+    const {pok_name} = req.body;
+
+    if(pok_name){
+        const query = `UPDATE pokemon SET pok_name= '${pok_name}' WHERE pok_id = ${req.params.id}`;
+
+        const queryResult = await db.query(query);
+
+        if(queryResult.affectedRows == 1){
+            return res.status(200).json({
+                ... req.body
+            });
+        } else {
+            return res.status(400).json({code: 400, message: "Ocurrió un error"});
+        }
+    } else {
+        return res.status(400).json({code: 400, message: "Ocurrió un error"});
+    }
 });
 
 // JS lee de manera lineal los métodos GET. i.e. en este orden -> / -> /all -> /:id hasta encontrar una ruta que empate con la ruta en la petición
