@@ -1,5 +1,6 @@
 const express = require('express');
 const pokemon = require('./routes/pokemon')
+const user = require('./routes/user')
 const morgan = require('morgan');
 
 console.log("Hola Mundo");
@@ -42,6 +43,8 @@ app.get("/", (req, res, next) => {
 
 //Todas las rutas /pokemon utilizaran lo que está dentro de pokemon
 app.use("/pokemon", pokemon);
+
+app.use("/user", user);
 
 // Baby's first middleware 😙
 // El middleware está hasta abajo para que solo se envie 404 si no se encuentra ingresa a ninguna de las rutas de arriba 
