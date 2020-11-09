@@ -3,7 +3,7 @@ const user = express.Router();
 const db = require('../config/database');
 const jwt = require('jsonwebtoken');
 
-user.post('/', async (req, res, next) => {
+user.post('/register', async (req, res, next) => {
     const {username, mail, password} = req.body;
 
     if(username && mail && password){
@@ -49,7 +49,7 @@ user.post("/login", async (req, res, next) =>{
             return res.status(401).json({status: 401, message: "Usuario y/o contraseña incorrectos"});
         }
     } else {
-        return res.status(400).json({status: 400, message: "Petición incorrects"});
+        return res.status(400).json({status: 400, message: "Petición incorrecta"});
     }
 
 });
