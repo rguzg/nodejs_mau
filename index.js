@@ -10,6 +10,7 @@ const user = require('./routes/user')
 // Middlewares
 const auth = require('./middleware/auth');
 const notfound = require('./middleware/notfound');
+const cors = require('./middleware/cors');
 
 console.log("Hola Mundo");
 
@@ -43,6 +44,7 @@ var z = 0; // <- Bad 😡
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(morgan('dev'));
+app.use(cors);
 
 app.get("/", (req, res, next) => {
     return res.status(200).json({code: 200, message:"Bienvenido al Pokédex"});
