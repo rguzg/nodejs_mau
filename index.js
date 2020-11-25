@@ -47,7 +47,8 @@ app.use(morgan('dev'));
 app.use(cors);
 
 app.get("/", (req, res, next) => {
-    return res.status(200).json({code: 200, message:"Bienvenido al Pokédex"});
+    // return res.status(200).json({code: 200, message:"Bienvenido al Pokédex"});
+    res.status(200)
 });
 
 app.use("/user", user);
